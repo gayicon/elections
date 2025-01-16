@@ -10,19 +10,27 @@ gdp_data = px.data.gapminder()
 st.write("Election data columns:", election_data.columns)
 st.write("GDP data columns:", gdp_data.columns)
 
-# Rename columns to ensure consistency in 'year'
-election_data.rename(columns={'Year': 'year'}, inplace=True)  # Rename 'Year' to 'year' in election data
-gdp_data.rename(columns={'year': 'year'}, inplace=True)  # Ensure both datasets have a 'year' column
+# Check the first few rows of the election data (debugging step)
+st.write("Election data sample:", election_data.head())
 
-# Ensure that the 'year' columns in both datasets are of type int (for merging)
+# Ensure the correct column name for 'year'
+# For example, 'year' might be under a different name like 'Year'
+# In this case, rename it to 'year'
+if 'Year' in election_data.columns:
+    election_data.rename(columns={'Year': 'year'}, inplace=True)
+
+# Check again if the 'year' column exists
+st.write("Election data columns after renaming:", election_data.columns)
+
+# Ensure the 'year' columns in both datasets are of type int (for merging)
 election_data['year'] = election_data['year'].astype(int)
 gdp_data['year'] = gdp_data['year'].astype(int)
 
-# Merge the datasets on the 'year' column (this assumes matching years between the two datasets)
+# Merge the datasets on the 'year' column
 merged_data = pd.merge(election_data, gdp_data, on='year')
 
-# Display the first few rows of the merged data (debugging step)
-st.write(merged_data.head())
+# Display the first few rows of the merged data
+st.write("Merged Data:", merged_data.head())
 
 # Create a scatter plot comparing GDP per capita and votes for each party
 fig = px.scatter(
